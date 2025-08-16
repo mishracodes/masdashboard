@@ -1,6 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import eodMockstatus from "../assets/eodstatus.json";
+import postingMockstates from "../assets/postingstates.json";
+import systemMockdates from "../assets/systemdates.json";
 
 const MurexEOD = () => {
+  const [eodstatus, seteodstatus] = useState([]);
+  const [postingstates, setpostingstates] = useState([]);
+  const [systemdates, setsystemdates] = useState([]);
+
+  useEffect(() => {
+    // Simulate API call delay
+    setTimeout(() => {
+      seteodstatus(eodMockstatus);
+      setpostingstates(postingMockstates);
+      setsystemdates(systemMockdates);
+    }, 500);
+  }, []);
+
   return (
     <div className="p-4 sm:ml-64">
       <div className="bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] p-4 rounded-xl shadow-xl col-span-1 my-5">
@@ -31,78 +47,20 @@ const MurexEOD = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Core
-              </th>
-              <td className="px-6 py-4">12:00</td>
-              <td className="px-6 py-4">01:29</td>
-              <td className="px-6 py-4">02:00</td>
-              <td className="px-6 py-4">Completed</td>
-            </tr>
-            <tr>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                CTC
-              </th>
-              <td className="px-6 py-4">12:00</td>
-              <td className="px-6 py-4">01:29</td>
-              <td className="px-6 py-4">02:00</td>
-              <td className="px-6 py-4">Completed</td>
-            </tr>
-            <tr>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Murcury
-              </th>
-              <td className="px-6 py-4">12:00</td>
-              <td className="px-6 py-4">01:29</td>
-              <td className="px-6 py-4">02:00</td>
-              <td className="px-6 py-4">Completed</td>
-            </tr>
-            <tr>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Accounting
-              </th>
-              <td className="px-6 py-4">12:00</td>
-              <td className="px-6 py-4">01:29</td>
-              <td className="px-6 py-4">02:00</td>
-              <td className="px-6 py-4">Completed</td>
-            </tr>
-            <tr>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                Regulatory
-              </th>
-              <td className="px-6 py-4">12:00</td>
-              <td className="px-6 py-4">01:29</td>
-              <td className="px-6 py-4">02:00</td>
-              <td className="px-6 py-4">Completed</td>
-            </tr>
-            <tr>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                TP_SQL_CLR
-              </th>
-              <td className="px-6 py-4">12:00</td>
-              <td className="px-6 py-4">01:29</td>
-              <td className="px-6 py-4">02:00</td>
-              <td className="px-6 py-4">Completed</td>
-            </tr>
+            {eodstatus.map((row, idx) => (
+              <tr key={idx}>
+                <th
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  scope="row"
+                >
+                  {row.block}
+                </th>
+                <td className="px-6 py-4">{row.startTime}</td>
+                <td className="px-6 py-4">{row.endTime}</td>
+                <td className="px-6 py-4">{row.allotedTime}</td>
+                <td className="px-6 py-4">{row.status}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -129,75 +87,62 @@ const MurexEOD = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                ACC
-              </th>
-              <td className="px-6 py-4">AP</td>
-              <td className="px-6 py-4">20250816</td>
-            </tr>
-            <tr>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                ACC
-              </th>
-              <td className="px-6 py-4">AP</td>
-              <td className="px-6 py-4">20250816</td>
-            </tr>
-            <tr>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                ACC
-              </th>
-              <td className="px-6 py-4">AP</td>
-              <td className="px-6 py-4">20250816</td>
-            </tr>
-            <tr>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                ACC
-              </th>
-              <td className="px-6 py-4">AP</td>
-              <td className="px-6 py-4">20250816</td>
-            </tr>
-            <tr>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                ACC
-              </th>
-              <td className="px-6 py-4">AP</td>
-              <td className="px-6 py-4">20250816</td>
-            </tr>
-            <tr>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                ACC
-              </th>
-              <td className="px-6 py-4">AP</td>
-              <td className="px-6 py-4">20250816</td>
-            </tr>
+            {systemdates.map((row, idx) => (
+              <tr key={idx}>
+                <th
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  scope="row"
+                >
+                  {row.block}
+                </th>
+                <td className="px-6 py-4">{row.entity}</td>
+                <td className="px-6 py-4">{row.date}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
 
-      <div className="bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff]  rounded-xl shadow-xl my-1 p-5 text-lg font-semibold text-left rtl:text-right text-gray-900  dark:text-white dark:bg-gray-800">
+      <div className="bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff]  rounded-xl shadow-xl my-5 p-5 text-lg font-semibold text-left rtl:text-right text-gray-900  dark:text-white dark:bg-gray-800">
         Posting Status
-        <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-          Posting was completed successfully for today. No Pending postings.
-        </p>
+        {postingstates.length === 0 && (
+          <p className="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+            Posting was completed successfully for today. No Pending postings.
+          </p>
+        )}
+        {postingstates.length != 0 && (
+          <>
+            <p className="mt-1 text-sm font-normal text-gray-500 mb-4 dark:text-gray-400">
+              Please find pending postings below
+            </p>
+
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 bg-[#e6e7ee] border border-[#d1d9e6] shadow-[inset_3px_3px_6px_#b8b9be,inset_-3px_-3px_6px_#fff] rounded-xl">
+              <thead>
+                <tr>
+                  <th className="px-6 py-4 border-b">Date</th>
+                  <th className="px-6 py-4 border-b">Error Type</th>
+                  <th className="px-6 py-4 border-b">Count</th>
+                  <th className="px-6 py-4 border-b">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {postingstates.map((row, idx) => (
+                  <tr key={idx}>
+                    <th
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      scope="row"
+                    >
+                      {row.date}
+                    </th>
+                    <td className="px-6 py-4">{row.errorType}</td>
+                    <td className="px-6 py-4">{row.count}</td>
+                    <td className="px-6 py-4">{row.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        )}
       </div>
     </div>
   );

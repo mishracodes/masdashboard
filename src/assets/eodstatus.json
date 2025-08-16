@@ -1,0 +1,44 @@
+[
+  {
+    "block": "Core",
+    "startTime": "12:00",
+    "endTime": "01:29",
+    "allotedTime": "02:00",
+    "status": "Completed"
+  },
+  {
+    "block": "CTC",
+    "startTime": "12:00",
+    "endTime": "01:29",
+    "allotedTime": "02:00",
+    "status": "Completed"
+  },
+  {
+    "block": "Murcury",
+    "startTime": "12:00",
+    "endTime": "01:29",
+    "allotedTime": "02:00",
+    "status": "Completed"
+  },
+  {
+    "block": "Accounting",
+    "startTime": "12:00",
+    "endTime": "01:29",
+    "allotedTime": "02:00",
+    "status": "Completed"
+  },
+  {
+    "block": "Regulatory",
+    "startTime": "12:00",
+    "endTime": "01:29",
+    "allotedTime": "02:00",
+    "status": "Completed"
+  },
+  {
+    "block": "TP_SQL_CLR",
+    "startTime": "12:00",
+    "endTime": "01:29",
+    "allotedTime": "02:00",
+    "status": "Completed"
+  }
+]

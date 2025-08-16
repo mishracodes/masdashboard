@@ -1,10 +1,19 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Chart } from "chart.js/auto";
 import {
   UserIcon,
   CpuChipIcon,
   ChartPieIcon,
 } from "@heroicons/react/24/outline";
+import statsMock from "../assets/stats.json";
+import cpuMock from "../assets/cpudataset.json";
+import ramMock from "../assets/ramdataset.json";
+const iconMap = {
+  UserIcon: <UserIcon className="w-6 h-6" />,
+  CpuChipIcon: <CpuChipIcon className="w-6 h-6" />,
+  ChartPieIcon: <ChartPieIcon className="w-6 h-6" />,
+};
+
 const Main = () => {
   const cpuChartRef = useRef(null);
   const memChartRef = useRef(null);
@@ -12,82 +21,31 @@ const Main = () => {
   const cpuChartInstance = useRef(null);
   const memChartInstance = useRef(null);
 
+  const [stats, setstats] = useState([]);
+  const [cpudataset, setcpudataset] = useState([]);
+  const [ramdataset, setramdataset] = useState([]);
+
   useEffect(() => {
-    // Destroy CPU chart if exists
-    if (cpuChartInstance.current) {
-      cpuChartInstance.current.destroy();
-    }
+    // set mock data
+    setTimeout(() => {
+      setstats(statsMock);
+      setcpudataset(cpuMock);
+      setramdataset(ramMock);
+    }, 500);
+  }, []); // run once on mount
 
-    // Destroy Memory chart if exists
-    if (memChartInstance.current) {
-      memChartInstance.current.destroy();
-    }
+  useEffect(() => {
+    if (!cpudataset.length || !ramdataset.length) return; // wait for data
 
+    if (cpuChartInstance.current) cpuChartInstance.current.destroy();
+    if (memChartInstance.current) memChartInstance.current.destroy();
     const ctxc = cpuChartRef.current.getContext("2d");
     const ctxm = memChartRef.current.getContext("2d");
-
-    const labels = [
-      "12:00",
-      "02:00",
-      "04:00",
-      "06:00",
-      "08:00",
-      "10:00",
-      "12:00",
-      "02:00",
-      "04:00",
-      "06:00",
-      "08:00",
-      "10:00",
-    ];
-
-    const datasets = [
-      {
-        label: "trafflon1100",
-        data: [20, 12, 56, 97, 31, 45, 60, 20, 99, 78, 40, 15],
-        borderColor: "rgba(53, 162, 235, 1)",
-        backgroundColor: "rgba(53, 162, 235, 0.2)",
-        fill: true,
-        tension: 0.4,
-      },
-      {
-        label: "trafflon1200",
-        data: [24, 15, 12, 66, 90, 18, 53, 72, 20, 49, 99, 61],
-        borderColor: "rgba(255, 99, 132, 1)",
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        fill: true,
-        tension: 0.4,
-      },
-      {
-        label: "trafflon1300",
-        data: [14, 18, 87, 43, 25, 91, 10, 76, 34, 88, 52, 67],
-        borderColor: "rgba(255, 206, 86, 1)",
-        backgroundColor: "rgba(255, 206, 86, 0.2)",
-        fill: true,
-        tension: 0.4,
-      },
-      {
-        label: "trafflon1400",
-        data: [35, 18, 99, 14, 83, 37, 48, 29, 95, 66, 41, 12],
-        borderColor: "rgba(75, 192, 192, 1)",
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        fill: true,
-        tension: 0.4,
-      },
-      {
-        label: "trafflon1500",
-        data: [18, 24, 61, 27, 39, 58, 85, 46, 23, 78, 55, 99],
-        borderColor: "rgba(153, 102, 255, 1)",
-        backgroundColor: "rgba(153, 102, 255, 0.2)",
-        fill: true,
-        tension: 0.4,
-      },
-    ];
 
     // CPU chart
     cpuChartInstance.current = new Chart(ctxc, {
       type: "line",
-      data: { labels, datasets },
+      data: { labels: cpudataset[0].labels, datasets: cpudataset[1].dataset },
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -98,18 +56,9 @@ const Main = () => {
       },
     });
 
-    // Memory chart (different random data for example)
     memChartInstance.current = new Chart(ctxm, {
       type: "line",
-      data: {
-        labels,
-        datasets: datasets.map((ds) => ({
-          ...ds,
-          data: Array.from({ length: labels.length }, () =>
-            Math.floor(Math.random() * 101)
-          ),
-        })),
-      },
+      data: { labels: ramdataset[0].labels, datasets: ramdataset[1].dataset },
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -124,38 +73,7 @@ const Main = () => {
       if (cpuChartInstance.current) cpuChartInstance.current.destroy();
       if (memChartInstance.current) memChartInstance.current.destroy();
     };
-  }, []);
-
-  const stats = [
-    {
-      title: "Active Users",
-      value: "281",
-      subtext: "Just updated",
-      icon: <UserIcon className="w-6 h-6" />,
-      color: "bg-gradient-to-br from-gray-800 to-gray-700",
-    },
-    {
-      title: "OSM Memory",
-      value: "31",
-      subtext: "Just updated",
-      icon: <CpuChipIcon className="w-6 h-6" />,
-      color: "bg-gradient-to-br from-blue-500 to-blue-400",
-    },
-    {
-      title: "OSP Func. Entries",
-      value: "281",
-      subtext: "Just updated",
-      icon: <ChartPieIcon className="w-6 h-6" />,
-      color: "bg-gradient-to-br from-green-500 to-green-400",
-    },
-    {
-      title: "OSP Tech. Entries",
-      value: "281",
-      subtext: "Just updated",
-      icon: <ChartPieIcon className="w-6 h-6" />,
-      color: "bg-gradient-to-br from-pink-500 to-pink-400",
-    },
-  ];
+  }, [cpudataset, ramdataset]);
 
   return (
     <div className="p-4 sm:ml-64 ">
@@ -164,37 +82,70 @@ const Main = () => {
 </svg>  */}
       <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-4">
-          {stats.map((stat, idx) => (
-            <div
-              key={idx}
-              className="bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 flex flex-col justify-between"
-            >
-              <div className="flex items-center">
-                <div
-                  className={`${stat.color} w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl shadow-xl`}
-                >
-                  {stat.icon}
+          {stats.length > 0 ? (
+            stats.map((stat, idx) => (
+              <div
+                key={idx}
+                className="bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 flex flex-col justify-between"
+              >
+                <div className="flex items-center">
+                  <div
+                    className={`${stat.color} w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl shadow-xl`}
+                  >
+                    {iconMap[stat.icon]}
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm text-gray-500">{stat.title}</p>
+                    <p className="text-2xl font-semibold">{stat.value}</p>
+                  </div>
                 </div>
-                <div className="ml-4">
-                  <p className="text-sm text-gray-500">{stat.title}</p>
-                  <p className="text-2xl font-semibold">{stat.value}</p>
+                <div className="mt-4 text-sm">
+                  <span className="ml-1 text-gray-500">{stat.subtext}</span>
                 </div>
               </div>
-              <div className="mt-4 text-sm">
-                <span className="ml-1 text-gray-500">{stat.subtext}</span>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            /*   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-4  max-w-sm rounded-md border border-blue-300 p-4">
+              {[...Array(4)].map((_, idx) => (
+                <div key={idx} class="flex animate-pulse space-x-4">
+                  <div class="size-10 rounded-full bg-gray-200"></div>
+                  <div class="flex-1 space-y-6 py-1">
+                    <div class="h-2 rounded bg-gray-200"></div>
+                    <div class="space-y-3">
+                      <div class="grid grid-cols-3 gap-4">
+                        <div class="col-span-2 h-2 rounded bg-gray-200"></div>
+                        <div class="col-span-1 h-2 rounded bg-gray-200"></div>
+                      </div>
+                      <div class="h-2 rounded bg-gray-200"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>*/
+            <>
+              <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32"></div>
+              <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32"></div>
+              <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32"></div>
+              <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32"></div>
+            </>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-          <div className="bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] p-4 rounded-xl shadow-xl col-span-1 h-100">
-            <canvas ref={cpuChartRef}></canvas>
+        {cpudataset.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 mb-4">
+            <div className="bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] p-4 rounded-xl shadow-xl col-span-1 h-100">
+              <canvas ref={cpuChartRef}></canvas>
+            </div>
+            <div className="bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] p-4 rounded-xl shadow-xl col-span-1 h-100">
+              <canvas ref={memChartRef}></canvas>
+            </div>
           </div>
-          <div className="bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] p-4 rounded-xl shadow-xl col-span-1 h-100">
-            <canvas ref={memChartRef}></canvas>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 mb-4 animate-pulse ">
+            <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32 h-100 rounded-xl col-span-1"></div>
+            <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32 h-100 rounded-xl col-span-1"></div>
           </div>
-        </div>
+        )}
 
         <div className="bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] p-4 rounded-xl shadow-xl col-span-1 my-5">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 bg-[#e6e7ee] border border-[#d1d9e6] shadow-[inset_3px_3px_6px_#b8b9be,inset_-3px_-3px_6px_#fff] rounded-xl">
