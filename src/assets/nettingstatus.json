@@ -1,47 +1,65 @@
 [
   {
-    "fileName": "citic_everbright_16-08-2025.csv",
+    "fileName": "clearer_CCB_Close_2025-08-14_040709.xml",
     "status": [
-      { "name": "Total", "count": 2550 },
-      { "name": "Completed", "count": 2550 },
-      { "name": "Error", "count": 2550 },
-      { "name": "Remaining", "count": 2550 }
+      { "name": "TOTAL", "count": 22 },
+      { "name": "COMPLETED", "count": 22 },
+      { "name": "ERROR", "count": 0 },
+      { "name": "REMAINING", "count": 0 }
     ]
   },
   {
-    "fileName": "citic_everbright_17-08-2025.csv",
+    "fileName": "clearer_Citic_Close_2025-08-14_041631.xml",
     "status": [
-      { "name": "Total", "count": 2550 },
-      { "name": "Completed", "count": 2550 },
-      { "name": "Error", "count": 2550 },
-      { "name": "Remaining", "count": 2550 }
+      { "name": "TOTAL", "count": 2389 },
+      { "name": "COMPLETED", "count": 2389 },
+      { "name": "ERROR", "count": 0 },
+      { "name": "REMAINING", "count": 0 }
     ]
   },
   {
-    "fileName": "citic_everbright_18-08-2025.csv",
+    "fileName": "clearer_Cofco_Close_2025-08-14_040914.xml",
     "status": [
-      { "name": "Total", "count": 2550 },
-      { "name": "Completed", "count": 2550 },
-      { "name": "Error", "count": 2550 },
-      { "name": "Remaining", "count": 2550 }
+      { "name": "TOTAL", "count": 261 },
+      { "name": "COMPLETED", "count": 261 },
+      { "name": "ERROR", "count": 0 },
+      { "name": "REMAINING", "count": 0 }
     ]
   },
   {
-    "fileName": "citic_everbright_18-08-2025.csv",
+    "fileName": "clearer_Everbright_Close_2025-08-14_040929.xml",
     "status": [
-      { "name": "Total", "count": 2550 },
-      { "name": "Completed", "count": 2550 },
-      { "name": "Error", "count": 2550 },
-      { "name": "Remaining", "count": 2550 }
+      { "name": "TOTAL", "count": 476 },
+      { "name": "COMPLETED", "count": 476 },
+      { "name": "ERROR", "count": 0 },
+      { "name": "REMAINING", "count": 0 }
     ]
   },
   {
-    "fileName": "citic_everbright_18-08-2025.csv",
+    "fileName": "clearer_GTJA_Close_2025-08-14_041104.xml",
     "status": [
-      { "name": "Total", "count": 2550 },
-      { "name": "Completed", "count": 2550 },
-      { "name": "Error", "count": 2550 },
-      { "name": "Remaining", "count": 2550 }
+      { "name": "TOTAL", "count": 1100 },
+      { "name": "COMPLETED", "count": 1100 },
+      { "name": "ERROR", "count": 0 },
+      { "name": "REMAINING", "count": 0 }
+    ]
+  },
+  {
+    "fileName": "clearer_Gtzg_Close_2025-08-14_041151.xml",
+    "status": [
+      { "name": "TOTAL", "count": 1599 },
+      { "name": "COMPLETED", "count": 1599 },
+      { "name": "ERROR", "count": 0 },
+      { "name": "REMAINING", "count": 0 }
+    ]
+  },
+  {
+    "fileName": "clearer_HGNH_Close_2025-08-14_041349.xml",
+    "status": [
+      { "name": "TOTAL", "count": 1195 },
+      { "name": "COMPLETED", "count": 1195 },
+      { "name": "ERROR", "count": 0 },
+      { "name": "REMAINING", "count": 0 }
     ]
   }
 ]

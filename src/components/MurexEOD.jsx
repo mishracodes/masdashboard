@@ -30,19 +30,25 @@ const MurexEOD = () => {
           <thead className="text-xs text-gray-700 uppercase bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] dark:bg-gray-700 dark:text-gray-400 ">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Block
+                EOD_DATE
               </th>
               <th scope="col" className="px-6 py-3">
-                Start Time
+                BLOCK_
               </th>
               <th scope="col" className="px-6 py-3">
-                End Time
+                START_
               </th>
               <th scope="col" className="px-6 py-3">
-                Alloted Time
+                END_
               </th>
               <th scope="col" className="px-6 py-3">
-                Status
+                CUT_OFF
+              </th>
+              <th scope="col" className="px-6 py-3">
+                STATUS
+              </th>
+              <th scope="col" className="px-6 py-3">
+                ENDED_STATUS_ERROR_CODE
               </th>
             </tr>
           </thead>
@@ -53,12 +59,14 @@ const MurexEOD = () => {
                   className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   scope="row"
                 >
-                  {row.block}
+                  {row.EOD_DATE}
                 </th>
-                <td className="px-6 py-4">{row.startTime}</td>
-                <td className="px-6 py-4">{row.endTime}</td>
-                <td className="px-6 py-4">{row.allotedTime}</td>
-                <td className="px-6 py-4">{row.status}</td>
+                <td className="px-6 py-4">{row.BLOCK_}</td>
+                <td className="px-6 py-4">{row.START_}</td>
+                <td className="px-6 py-4">{row.END_}</td>
+                <td className="px-6 py-4">{row.CUT_OFF}</td>
+                <td className="px-6 py-4">{row.STATUS}</td>
+                <td className="px-6 py-4">{row.ENDED_STATUS_ERROR_CODE}</td>
               </tr>
             ))}
           </tbody>
@@ -76,13 +84,13 @@ const MurexEOD = () => {
           <thead className="text-xs text-gray-700 uppercase bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] dark:bg-gray-700 dark:text-gray-400 ">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Block
+                TYPE
               </th>
               <th scope="col" className="px-6 py-3">
-                Entity
+                LABEL
               </th>
               <th scope="col" className="px-6 py-3">
-                Date
+                M_DATE
               </th>
             </tr>
           </thead>
@@ -93,10 +101,10 @@ const MurexEOD = () => {
                   className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   scope="row"
                 >
-                  {row.block}
+                  {row.TYPE}
                 </th>
-                <td className="px-6 py-4">{row.entity}</td>
-                <td className="px-6 py-4">{row.date}</td>
+                <td className="px-6 py-4">{row.LABEL}</td>
+                <td className="px-6 py-4">{row.M_DATE}</td>
               </tr>
             ))}
           </tbody>
@@ -119,10 +127,10 @@ const MurexEOD = () => {
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 bg-[#e6e7ee] border border-[#d1d9e6] shadow-[inset_3px_3px_6px_#b8b9be,inset_-3px_-3px_6px_#fff] rounded-xl">
               <thead>
                 <tr>
-                  <th className="px-6 py-4 border-b">Date</th>
-                  <th className="px-6 py-4 border-b">Error Type</th>
-                  <th className="px-6 py-4 border-b">Count</th>
-                  <th className="px-6 py-4 border-b">Status</th>
+                  <th className="px-6 py-4 border-b">REPORTING_DATE</th>
+                  <th className="px-6 py-4 border-b">POSTING_STATE</th>
+                  <th className="px-6 py-4 border-b">COUNT</th>
+                  <th className="px-6 py-4 border-b">STATUS</th>
                 </tr>
               </thead>
               <tbody>
@@ -132,11 +140,11 @@ const MurexEOD = () => {
                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                       scope="row"
                     >
-                      {row.date}
+                      {row.REPORTING_DATE}
                     </th>
-                    <td className="px-6 py-4">{row.errorType}</td>
-                    <td className="px-6 py-4">{row.count}</td>
-                    <td className="px-6 py-4">{row.status}</td>
+                    <td className="px-6 py-4">{row.POSTING_STATE}</td>
+                    <td className="px-6 py-4">{row.CNT}</td>
+                    <td className="px-6 py-4">{row.COMMENTS}</td>
                   </tr>
                 ))}
               </tbody>

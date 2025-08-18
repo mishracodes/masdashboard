@@ -1,14 +1,8 @@
 [
   {
-    "date": "20250816",
-    "errorType": "MIR",
-    "count": 5,
-    "status": "MAS Checking"
-  },
-  {
-    "date": "20250816",
-    "errorType": "PE",
-    "count": 3,
-    "status": "SD Team Checking"
+    "REPORTING_DATE": "2025-08-02",
+    "POSTING_STATE": "TRANSFORM_ERROR",
+    "CNT": 2,
+    "COMMENTS": "MAS Checking"
   }
 ]

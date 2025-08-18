@@ -1,14 +1,56 @@
 import React, { useEffect, useState } from "react";
-import nettingMockData from "../assets/nettingstatus.json";
+import Loader from "./Loader";
+//import nettingMockData from "../assets/nettingstatus.json";
 const NettingStatus = () => {
-  const [nettingData, setnettingData] = useState([]);
+  const [nettingData, setNettingData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [apiUrl, setApiUrl] = useState(null);
 
   useEffect(() => {
-    // Simulate API call delay
-    setTimeout(() => {
-      setnettingData(nettingMockData);
-    }, 500);
+    fetch("/config.json")
+      .then((res) => res.json())
+      .then((config) => {
+        setApiUrl(config.NETTING_API_URL);
+      })
+      .catch(() => setError("⚠️ Failed to load config.json"));
   }, []);
+
+  useEffect(() => {
+    if (!apiUrl) return;
+
+    const fetchData = () => {
+      setLoading(true);
+      fetch(`${apiUrl}/systemdates`)
+        .then((res) => {
+          if (!res.ok) throw new Error("API request failed");
+          return res.json();
+        })
+        .then((data) => {
+          setNettingData(data);
+          setError(null);
+        })
+        .catch(() => setError("⚠️ Error encountered, please check with ADMIN"))
+        .finally(() => setLoading(false));
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 60000); // refresh every 60s
+    return () => clearInterval(interval);
+  }, [apiUrl]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-40">
+        <p className="text-red-600 font-semibold">{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 sm:ml-64">
       <div className="bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] p-4 rounded-xl shadow-xl col-span-1 my-5">
@@ -33,7 +75,7 @@ const NettingStatus = () => {
             </tr>
           </thead>
           <tbody>
-            {nettingMockData.map((file, fileIdx) => {
+            {nettingData.map((file, fileIdx) => {
               // Choose background based on batch index
               const bgColor =
                 fileIdx % 2 === 0 ? "bg-[#e6e7ee]" : "bg-[#dee0e7]";

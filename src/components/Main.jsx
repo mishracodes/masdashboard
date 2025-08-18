@@ -8,6 +8,8 @@ import {
 import statsMock from "../assets/stats.json";
 import cpuMock from "../assets/cpudataset.json";
 import ramMock from "../assets/ramdataset.json";
+import cbpMock from "../assets/cbpdata.json";
+
 const iconMap = {
   UserIcon: <UserIcon className="w-6 h-6" />,
   CpuChipIcon: <CpuChipIcon className="w-6 h-6" />,
@@ -24,6 +26,7 @@ const Main = () => {
   const [stats, setstats] = useState([]);
   const [cpudataset, setcpudataset] = useState([]);
   const [ramdataset, setramdataset] = useState([]);
+  const [cbpdataset, setcbpdataset] = useState([]);
 
   useEffect(() => {
     // set mock data
@@ -31,6 +34,7 @@ const Main = () => {
       setstats(statsMock);
       setcpudataset(cpuMock);
       setramdataset(ramMock);
+      setcbpdataset(cbpMock);
     }, 500);
   }, []); // run once on mount
 
@@ -496,33 +500,17 @@ const Main = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  CPB_ENTRY_T0.csv
-                </th>
-                <td className="px-6 py-4">4</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  CPB_ENTRY_T0.csv
-                </th>
-                <td className="px-6 py-4">0</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  CPB_ENTRY_T0.csv
-                </th>
-                <td className="px-6 py-4">8</td>
-              </tr>
+              {Object.entries(cbpdataset).map(([filename, count]) => (
+                <tr key={filename}>
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    {filename}.csv
+                  </th>
+                  <td className="px-6 py-4">{count}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
