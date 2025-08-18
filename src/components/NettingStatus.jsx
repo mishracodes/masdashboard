@@ -11,7 +11,7 @@ const NettingStatus = () => {
     fetch("/config.json")
       .then((res) => res.json())
       .then((config) => {
-        setApiUrl(config.NETTING_API_URL);
+        setApiUrl(config.API_URL);
       })
       .catch(() => setError("⚠️ Failed to load config.json"));
   }, []);
@@ -21,7 +21,7 @@ const NettingStatus = () => {
 
     const fetchData = () => {
       setLoading(true);
-      fetch(`${apiUrl}/systemdates`)
+      fetch(`${apiUrl}/api/netting`)
         .then((res) => {
           if (!res.ok) throw new Error("API request failed");
           return res.json();

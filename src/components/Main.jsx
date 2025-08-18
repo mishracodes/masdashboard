@@ -5,11 +5,7 @@ import {
   CpuChipIcon,
   ChartPieIcon,
 } from "@heroicons/react/24/outline";
-import statsMock from "../assets/stats.json";
-import cpuMock from "../assets/cpudataset.json";
-import ramMock from "../assets/ramdataset.json";
-import cbpMock from "../assets/cbpdata.json";
-
+import Loader from "./Loader";
 const iconMap = {
   UserIcon: <UserIcon className="w-6 h-6" />,
   CpuChipIcon: <CpuChipIcon className="w-6 h-6" />,
@@ -28,15 +24,51 @@ const Main = () => {
   const [ramdataset, setramdataset] = useState([]);
   const [cbpdataset, setcbpdataset] = useState([]);
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [apiUrl, setApiUrl] = useState(null);
+
   useEffect(() => {
-    // set mock data
-    setTimeout(() => {
-      setstats(statsMock);
-      setcpudataset(cpuMock);
-      setramdataset(ramMock);
-      setcbpdataset(cbpMock);
-    }, 500);
-  }, []); // run once on mount
+    fetch("/config.json")
+      .then((res) => res.json())
+      .then((config) => {
+        setApiUrl(config.API_URL);
+      })
+      .catch(() => setError("⚠️ Failed to load config.json"));
+  }, []);
+
+  useEffect(() => {
+    if (!apiUrl) return;
+
+    const fetchData = () => {
+      setLoading(true);
+
+      Promise.allSettled([
+        fetch(`${apiUrl}/api/stats`).then((res) => res.json()),
+        fetch(`${apiUrl}/api/cpu`).then((res) => res.json()),
+        fetch(`${apiUrl}/api/ram`).then((res) => res.json()),
+        fetch(`${apiUrl}/api/cbp`).then((res) => res.json()),
+      ])
+        .then((results) => {
+          results.forEach((result, index) => {
+            if (result.status === "fulfilled") {
+              if (index === 0) setstats(result.value);
+              if (index === 1) setcpudataset(result.value);
+              if (index === 2) setramdataset(result.value);
+              if (index === 3) setcbpdataset(result.value);
+            } else {
+              console.error(`API ${index + 1} failed:`, result.reason);
+              setError("⚠️ Some data failed to load. Please check with ADMIN.");
+            }
+          });
+        })
+        .finally(() => setLoading(false));
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 60000); // refresh every 60s
+    return () => clearInterval(interval);
+  }, [apiUrl]);
 
   useEffect(() => {
     if (!cpudataset.length || !ramdataset.length) return; // wait for data
@@ -78,6 +110,18 @@ const Main = () => {
       if (memChartInstance.current) memChartInstance.current.destroy();
     };
   }, [cpudataset, ramdataset]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-40">
+        <p className="text-red-600 font-semibold">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 sm:ml-64 ">

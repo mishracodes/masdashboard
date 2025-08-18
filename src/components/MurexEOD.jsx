@@ -1,21 +1,66 @@
 import React, { useEffect, useState } from "react";
-import eodMockstatus from "../assets/eodstatus.json";
-import postingMockstates from "../assets/postingstates.json";
-import systemMockdates from "../assets/systemdates.json";
+import Loader from "./Loader";
 
 const MurexEOD = () => {
-  const [eodstatus, seteodstatus] = useState([]);
-  const [postingstates, setpostingstates] = useState([]);
-  const [systemdates, setsystemdates] = useState([]);
+  const [eodstatus, setEodstatus] = useState([]);
+  const [postingstates, setPostingstates] = useState([]);
+  const [systemdates, setSystemdates] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [apiUrl, setApiUrl] = useState(null);
 
   useEffect(() => {
-    // Simulate API call delay
-    setTimeout(() => {
-      seteodstatus(eodMockstatus);
-      setpostingstates(postingMockstates);
-      setsystemdates(systemMockdates);
-    }, 500);
+    fetch("/config.json")
+      .then((res) => res.json())
+      .then((config) => {
+        setApiUrl(config.API_URL);
+      })
+      .catch(() => setError("⚠️ Failed to load config.json"));
   }, []);
+
+  useEffect(() => {
+    if (!apiUrl) return;
+
+    const fetchData = () => {
+      setLoading(true);
+
+      Promise.allSettled([
+        fetch(`${apiUrl}/api/eod`).then((res) => res.json()),
+        fetch(`${apiUrl}/api/posting`).then((res) => res.json()),
+        fetch(`${apiUrl}/api/date`).then((res) => res.json()),
+      ])
+        .then((results) => {
+          results.forEach((result, index) => {
+            if (result.status === "fulfilled") {
+              if (index === 0) setEodstatus(result.value);
+              if (index === 1) setPostingstates(result.value);
+              if (index === 2) setSystemdates(result.value);
+            } else {
+              console.error(`API ${index + 1} failed:`, result.reason);
+              setError("⚠️ Some data failed to load. Please check with ADMIN.");
+            }
+          });
+        })
+        .finally(() => setLoading(false));
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 60000); // refresh every 60s
+    return () => clearInterval(interval);
+  }, [apiUrl]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-40">
+        <p className="text-red-600 font-semibold">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 sm:ml-64">
