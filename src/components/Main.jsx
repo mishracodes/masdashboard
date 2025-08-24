@@ -19,9 +19,15 @@ const Main = () => {
   const cpuChartInstance = useRef(null);
   const memChartInstance = useRef(null);
 
-  const [stats, setstats] = useState([]);
+  const [ospentries, setospentries] = useState([]);
+  const [ospmem, setospmem] = useState([]);
+  const [actusers, setactusers] = useState([]);
   const [cpudataset, setcpudataset] = useState([]);
   const [ramdataset, setramdataset] = useState([]);
+  const [mxservices, setmxservices] = useState([]);
+  const [mxworkflows, setmxworkflows] = useState([]);
+  const [diskutil, setdiskutil] = useState([]);
+  const [accwfentries, setaccwfentries] = useState([]);
   const [cbpdataset, setcbpdataset] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -44,18 +50,30 @@ const Main = () => {
       setLoading(true);
 
       Promise.allSettled([
-        fetch(`${apiUrl}/api/stats`).then((res) => res.json()),
+        fetch(`${apiUrl}/api/ospentries`).then((res) => res.json()),
+        fetch(`${apiUrl}/api/ospmem`).then((res) => res.json()),
+        fetch(`${apiUrl}/api/actusers`).then((res) => res.json()),
         fetch(`${apiUrl}/api/cpu`).then((res) => res.json()),
         fetch(`${apiUrl}/api/ram`).then((res) => res.json()),
+        fetch(`${apiUrl}/api/mxservices`).then((res) => res.json()),
+        fetch(`${apiUrl}/api/mxworkflows`).then((res) => res.json()),
+        fetch(`${apiUrl}/api/diskutil`).then((res) => res.json()),
+        fetch(`${apiUrl}/api/accwfentries`).then((res) => res.json()),
         fetch(`${apiUrl}/api/cbp`).then((res) => res.json()),
       ])
         .then((results) => {
           results.forEach((result, index) => {
             if (result.status === "fulfilled") {
-              if (index === 0) setstats(result.value);
-              if (index === 1) setcpudataset(result.value);
-              if (index === 2) setramdataset(result.value);
-              if (index === 3) setcbpdataset(result.value);
+              if (index === 0) setospentries(result.value);
+              if (index === 1) setospmem(result.value);
+              if (index === 2) setactusers(result.value);
+              if (index === 3) setcpudataset(result.value);
+              if (index === 4) setramdataset(result.value);
+              if (index === 5) setmxservices(result.value);
+              if (index === 6) setmxworkflows(result.value);
+              if (index === 7) setdiskutil(result.value);
+              if (index === 8) setaccwfentries(result.value);
+              if (index === 9) setcbpdataset(result.value);
             } else {
               console.error(`API ${index + 1} failed:`, result.reason);
               setError("⚠️ Some data failed to load. Please check with ADMIN.");
@@ -130,46 +148,89 @@ const Main = () => {
 </svg>  */}
       <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-4">
-          {stats.length > 0 ? (
-            stats.map((stat, idx) => (
+          {Object.keys(actusers).length > 0 ? (
+            <div
+              key={actusers["title"]}
+              className="bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 flex flex-col justify-between"
+            >
+              <div className="flex items-center">
+                <div
+                  className={`${actusers["color"]} w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl shadow-xl`}
+                >
+                  {iconMap[actusers["icon"]]}
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm text-gray-500">{actusers["title"]}</p>
+                  <p className="text-2xl font-semibold">{actusers["value"]}</p>
+                </div>
+              </div>
+              <div className="mt-4 text-sm">
+                <span className="ml-1 text-gray-500">
+                  {actusers["subtext"]}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32"></div>
+              <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32"></div>
+              <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32"></div>
+              <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32"></div>
+            </>
+          )}
+
+          {Object.keys(ospmem).length > 0 ? (
+            <div
+              key={ospmem["title"]}
+              className="bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 flex flex-col justify-between"
+            >
+              <div className="flex items-center">
+                <div
+                  className={`${ospmem["color"]} w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl shadow-xl`}
+                >
+                  {iconMap[ospmem["icon"]]}
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm text-gray-500">{ospmem["title"]}</p>
+                  <p className="text-2xl font-semibold">{ospmem["value"]}</p>
+                </div>
+              </div>
+              <div className="mt-4 text-sm">
+                <span className="ml-1 text-gray-500">{ospmem["subtext"]}</span>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32"></div>
+              <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32"></div>
+              <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32"></div>
+              <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32"></div>
+            </>
+          )}
+
+          {ospentries.length > 0 ? (
+            ospentries.map((ospentry, idx) => (
               <div
                 key={idx}
                 className="bg-[#e6e7ee] border border-[#d1d9e6] shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 flex flex-col justify-between"
               >
                 <div className="flex items-center">
                   <div
-                    className={`${stat.color} w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl shadow-xl`}
+                    className={`${ospentry.color} w-12 h-12 rounded-lg flex items-center justify-center text-white text-xl shadow-xl`}
                   >
-                    {iconMap[stat.icon]}
+                    {iconMap[ospentry.icon]}
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm text-gray-500">{stat.title}</p>
-                    <p className="text-2xl font-semibold">{stat.value}</p>
+                    <p className="text-sm text-gray-500">{ospentry.title}</p>
+                    <p className="text-2xl font-semibold">{ospentry.value}</p>
                   </div>
                 </div>
                 <div className="mt-4 text-sm">
-                  <span className="ml-1 text-gray-500">{stat.subtext}</span>
+                  <span className="ml-1 text-gray-500">{ospentry.subtext}</span>
                 </div>
               </div>
             ))
           ) : (
-            /*   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-4  max-w-sm rounded-md border border-blue-300 p-4">
-              {[...Array(4)].map((_, idx) => (
-                <div key={idx} class="flex animate-pulse space-x-4">
-                  <div class="size-10 rounded-full bg-gray-200"></div>
-                  <div class="flex-1 space-y-6 py-1">
-                    <div class="h-2 rounded bg-gray-200"></div>
-                    <div class="space-y-3">
-                      <div class="grid grid-cols-3 gap-4">
-                        <div class="col-span-2 h-2 rounded bg-gray-200"></div>
-                        <div class="col-span-1 h-2 rounded bg-gray-200"></div>
-                      </div>
-                      <div class="h-2 rounded bg-gray-200"></div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>*/
             <>
               <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32"></div>
               <div className="bg-gray-300 border border-gray-400 shadow-[3px_3px_6px_#b8b9be,-3px_-3px_6px_#fff] shadow-xl rounded-xl p-5 w-full h-32"></div>
@@ -210,64 +271,36 @@ const Main = () => {
                   Service Name
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Server
+                  NickName
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Status
+                  Host
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  NPID
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  CreationTime
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  loginimpl
-                </th>
-                <td className="px-6 py-4">trafflon1100</td>
-                <td className="px-6 py-4">Running</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  loginimpl
-                </th>
-                <td className="px-6 py-4">trafflon1100</td>
-                <td className="px-6 py-4">Running</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  loginimpl
-                </th>
-                <td className="px-6 py-4">trafflon1100</td>
-                <td className="px-6 py-4">Running</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  loginimpl
-                </th>
-                <td className="px-6 py-4">trafflon1100</td>
-                <td className="px-6 py-4">Running</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white "
-                >
-                  loginimpl
-                </th>
-                <td className="px-6 py-4">trafflon1100</td>
-                <td className="px-6 py-4">Running</td>
-              </tr>
+              {mxservices.map((row, idx) => (
+                <tr key={idx}>
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    {row.InstallationCode}
+                  </th>
+                  <td className="px-6 py-4">
+                    {row.NickName ? row.NickName : ""}
+                  </td>
+                  <td className="px-6 py-4">{row.Host}</td>
+                  <td className="px-6 py-4">{row.NPID}</td>
+                  <td className="px-6 py-4">{row.CreationTime}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -291,51 +324,17 @@ const Main = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Titan HM
-                </th>
-                <td className="px-6 py-4">Running</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Titan HM
-                </th>
-                <td className="px-6 py-4">Running</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Titan HM
-                </th>
-                <td className="px-6 py-4">Running</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Titan HM
-                </th>
-                <td className="px-6 py-4">Running</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Titan HM
-                </th>
-                <td className="px-6 py-4">Running</td>
-              </tr>
+              {mxworkflows.map((row, idx) => (
+                <tr key={idx}>
+                  <th
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    scope="row"
+                  >
+                    {row.Workflow}
+                  </th>
+                  <td className="px-6 py-4">{row.Status}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -355,72 +354,48 @@ const Main = () => {
                   Server
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Mount
+                  Filesystem
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  %used
+                  Size
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  %available
+                  Used
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Avail
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Use%
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Mounted_on
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  trafflon1100
-                </th>
-                <td className="px-6 py-4">/tmp</td>
-                <td className="px-6 py-4">35</td>
-                <td className="px-6 py-4">65</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  trafflon1100
-                </th>
-                <td className="px-6 py-4">/tmp</td>
-                <td className="px-6 py-4">35</td>
-                <td className="px-6 py-4">65</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  trafflon1100
-                </th>
-                <td className="px-6 py-4">/tmp</td>
-                <td className="px-6 py-4">35</td>
-                <td className="px-6 py-4">65</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  trafflon1100
-                </th>
-                <td className="px-6 py-4">/tmp</td>
-                <td className="px-6 py-4">35</td>
-                <td className="px-6 py-4">65</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  trafflon1100
-                </th>
-                <td className="px-6 py-4">/tmp</td>
-                <td className="px-6 py-4">35</td>
-                <td className="px-6 py-4">65</td>
-              </tr>
+              {Object.entries(diskutil).map(([server, filesystems], idx) =>
+                filesystems.map((row, rowIdx) => (
+                  <tr key={`${server}-${rowIdx}`}>
+                    {/* show server name only in the first column for the first row */}
+                    {rowIdx === 0 ? (
+                      <th
+                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        scope="row"
+                        rowSpan={filesystems.length}
+                      >
+                        {server}
+                      </th>
+                    ) : null}
+                    <td className="px-6 py-4">{row.Filesystem}</td>
+                    <td className="px-6 py-4">{row.Size}</td>
+                    <td className="px-6 py-4">{row.Used}</td>
+                    <td className="px-6 py-4">{row.Avail}</td>
+                    <td className="px-6 py-4">{row["Use%"]}</td>
+                    <td className="px-6 py-4">{row.Mounted_on}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -442,85 +417,47 @@ const Main = () => {
                   Sheet Name
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Task Name
+                  FROM_TASK
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Node
+                  FROM_TASK_TYPE
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Current Entries (T)
+                  FROM_NODE
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Prior Entries (T-10mins)
+                  WAITING_ENTRIES
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  TO_TASK
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  TO_TASK_TYPE
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  TO_NODE
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Exchange
-                </th>
-                <td className="px-6 py-4">Titan HM</td>
-                <td className="px-6 py-4">csvTransformRouter</td>
-                <td className="px-6 py-4">64285</td>
-                <td className="px-6 py-4">35845</td>
-                <td className="px-6 py-4">45854</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Exchange
-                </th>
-                <td className="px-6 py-4">Titan HM</td>
-                <td className="px-6 py-4">csvTransformRouter</td>
-                <td className="px-6 py-4">64285</td>
-                <td className="px-6 py-4">35845</td>
-                <td className="px-6 py-4">45854</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Exchange
-                </th>
-                <td className="px-6 py-4">Titan HM</td>
-                <td className="px-6 py-4">csvTransformRouter</td>
-                <td className="px-6 py-4">64285</td>
-                <td className="px-6 py-4">35845</td>
-                <td className="px-6 py-4">45854</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Exchange
-                </th>
-                <td className="px-6 py-4">Titan HM</td>
-                <td className="px-6 py-4">csvTransformRouter</td>
-                <td className="px-6 py-4">64285</td>
-                <td className="px-6 py-4">35845</td>
-                <td className="px-6 py-4">45854</td>
-              </tr>
-              <tr>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Exchange
-                </th>
-                <td className="px-6 py-4">Titan HM</td>
-                <td className="px-6 py-4">csvTransformRouter</td>
-                <td className="px-6 py-4">64285</td>
-                <td className="px-6 py-4">35845</td>
-                <td className="px-6 py-4">45854</td>
-              </tr>
+              {accwfentries.map((row, idx) => (
+                <tr key={idx}>
+                  <th
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    scope="row"
+                  >
+                    {row.WORKFLOW}
+                  </th>
+                  <td className="px-6 py-4">{row.SHEET}</td>
+                  <td className="px-6 py-4">{row.FROM_TASK}</td>
+                  <td className="px-6 py-4">{row.FROM_TASK_TYPE}</td>
+                  <td className="px-6 py-4">{row.FROM_NODE}</td>
+                  <td className="px-6 py-4">{row.WAITING_ENTRIES}</td>
+                  <td className="px-6 py-4">{row.TO_TASK}</td>
+                  <td className="px-6 py-4">{row.TO_TASK_TYPE}</td>
+                  <td className="px-6 py-4">{row.TO_NODE}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
